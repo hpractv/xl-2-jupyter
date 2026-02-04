@@ -126,4 +126,3 @@ class VBAExtractor:
 
         except Exception:
             return "Unknown"
-

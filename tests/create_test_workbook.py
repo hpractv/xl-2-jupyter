@@ -48,7 +48,7 @@ def create_test_workbook(output_path: Path):
         # Add formulas
         sheet1.range("B7").formula = "=SUM(B2:B6)"
         sheet1.range("B8").formula = "=AVERAGE(B2:B6)"
-        sheet1.range("B9").formula = "=IF(B7>100,\"High\",\"Low\")"
+        sheet1.range("B9").formula = '=IF(B7>100,"High","Low")'
         sheet1.range("B10").formula = "=COUNT(B2:B6)"
         sheet1.range("B11").formula = "=MAX(B2:B6)"
         sheet1.range("B12").formula = "=MIN(B2:B6)"
@@ -81,8 +81,8 @@ def create_test_workbook(output_path: Path):
         sheet3.range("C1").formula = "=SUM(A1:B5)"
         sheet3.range("C2").formula = "=MAX(A1:A5)"
         sheet3.range("C3").formula = "=MIN(A1:A5)"
-        sheet3.range("C4").formula = "=IF(SUM(A1:A5)>10,\"Large\",\"Small\")"
-        sheet3.range("C5").formula = "=SUMIF(A1:A5,\">2\",B1:B5)"
+        sheet3.range("C4").formula = '=IF(SUM(A1:A5)>10,"Large","Small")'
+        sheet3.range("C5").formula = '=SUMIF(A1:A5,">2",B1:B5)'
         sheet3.range("D1").formula = "=VLOOKUP(3,A1:B5,2,FALSE)"
         sheet3.range("D2").formula = "=INDEX(A1:A5,MATCH(3,A1:A5,0))"
 
@@ -205,9 +205,13 @@ def create_test_workbook(output_path: Path):
 
         # Row 4: References row 3 and creates circular-like pattern
         sheet7.range("A4").formula = "=A3+10"
-        sheet7.range("B4").formula = "=B3+A4+C2"  # References B3 (above), A4 (same row), C2 (two rows up)
+        sheet7.range("B4").formula = (
+            "=B3+A4+C2"  # References B3 (above), A4 (same row), C2 (two rows up)
+        )
         sheet7.range("C4").formula = "=C3+B4"
-        sheet7.range("D4").formula = "=D3+C4+A2"  # References D3 (above), C4 (same row), A2 (two rows up)
+        sheet7.range("D4").formula = (
+            "=D3+C4+A2"  # References D3 (above), C4 (same row), A2 (two rows up)
+        )
 
         # Row 5: Cross-sheet references mixed with local criss-cross
         sheet7.range("A5").formula = "=A4+Data!B2"  # Local + cross-sheet
@@ -219,7 +223,9 @@ def create_test_workbook(output_path: Path):
         sheet7.range("A7").formula = "=SUM(A1:A5)"
         sheet7.range("B7").formula = "=SUM(B1:B5)+A7"  # References A7 only (no circular ref)
         sheet7.range("C7").formula = "=SUM(C1:C5)+A7+B7"  # References A7 and B7 (no circular ref)
-        sheet7.range("D7").formula = "=SUM(D1:D5)+A7+B7+C7"  # References A7, B7, C7 (no circular ref)
+        sheet7.range("D7").formula = (
+            "=SUM(D1:D5)+A7+B7+C7"  # References A7, B7, C7 (no circular ref)
+        )
 
         # Sheet 8: Diagonal and scattered references
         sheet8 = wb.sheets.add("Scattered")
@@ -246,29 +252,49 @@ def create_test_workbook(output_path: Path):
         # Final summary with scattered references (fixed to avoid circular references)
         sheet8.range("A13").formula = "=A11+C11+E11+G11+I11"
         sheet8.range("B13").formula = "=A13+A2"  # References A13 and A2 (removed self-reference)
-        sheet8.range("C13").formula = "=B13+CrissCross!A7"  # Cross-sheet reference (no circular ref)
+        sheet8.range("C13").formula = (
+            "=B13+CrissCross!A7"  # Cross-sheet reference (no circular ref)
+        )
 
         # Sheet 9: Cross-sheet criss-cross references
         sheet9 = wb.sheets.add("CrossSheetRefs")
         # Create formulas that reference multiple sheets in criss-cross pattern
         sheet9.range("A1").formula = "=Data!B7+Calculations!B1"  # References two different sheets
-        sheet9.range("B1").formula = "=A1+Complex!C1"  # References A1 (same sheet) and Complex sheet
-        sheet9.range("C1").formula = "=B1+CrissCross!A7+Data!B8"  # References B1, CrissCross, and Data
+        sheet9.range("B1").formula = (
+            "=A1+Complex!C1"  # References A1 (same sheet) and Complex sheet
+        )
+        sheet9.range("C1").formula = (
+            "=B1+CrissCross!A7+Data!B8"  # References B1, CrissCross, and Data
+        )
 
         sheet9.range("A2").formula = "=A1+JaggedData!J8"  # References A1 (above) and JaggedData
-        sheet9.range("B2").formula = "=B1+A2+Scattered!A13"  # References B1 (above), A2 (same row), Scattered
-        sheet9.range("C2").formula = "=C1+B2+ChartData!B8"  # References C1 (above), B2 (same row), ChartData
+        sheet9.range("B2").formula = (
+            "=B1+A2+Scattered!A13"  # References B1 (above), A2 (same row), Scattered
+        )
+        sheet9.range("C2").formula = (
+            "=C1+B2+ChartData!B8"  # References C1 (above), B2 (same row), ChartData
+        )
 
-        sheet9.range("A3").formula = "=A2+Data!B2"  # Fixed: removed self-reference, uses Data instead
+        sheet9.range("A3").formula = (
+            "=A2+Data!B2"  # Fixed: removed self-reference, uses Data instead
+        )
         sheet9.range("B3").formula = "=B2+A3+Data!B11"  # References B2 (above), A3 (same row), Data
-        sheet9.range("C3").formula = "=C2+B3+Calculations!B3"  # References C2 (above), B3 (same row), Calculations
+        sheet9.range("C3").formula = (
+            "=C2+B3+Calculations!B3"  # References C2 (above), B3 (same row), Calculations
+        )
 
         # Create a dependency chain across sheets (fixed to avoid circular references)
         sheet9.range("A5").formula = "=Data!B7"  # Start with Data
-        sheet9.range("B5").formula = "=A5+Calculations!B1"  # References A5 and Calculations (which references Data)
+        sheet9.range("B5").formula = (
+            "=A5+Calculations!B1"  # References A5 and Calculations (which references Data)
+        )
         sheet9.range("C5").formula = "=B5+CrissCross!A7"  # References B5 and CrissCross
-        sheet9.range("D5").formula = "=C5+Scattered!A13"  # References C5 and Scattered (which references CrissCross)
-        sheet9.range("E5").formula = "=D5+Data!B8"  # Fixed: removed circular reference, uses Data instead
+        sheet9.range("D5").formula = (
+            "=C5+Scattered!A13"  # References C5 and Scattered (which references CrissCross)
+        )
+        sheet9.range("E5").formula = (
+            "=D5+Data!B8"  # Fixed: removed circular reference, uses Data instead
+        )
 
         # Sheet 10: Large Sales Data Table
         sheet10 = wb.sheets.add("LargeSalesData")
@@ -372,8 +398,10 @@ def create_test_workbook(output_path: Path):
         regions = ["North", "South", "East", "West", "Central"]
         for i, region in enumerate(regions, start=2):
             sheet11.range(f"D{i}").value = region
-            sheet11.range(f"E{i}").formula = f"=SUMIF(LargeSalesData!B2:B201,\"{region}\",LargeSalesData!D2:D201)"
-            sheet11.range(f"F{i}").formula = f"=COUNTIF(LargeSalesData!B2:B201,\"{region}\")"
+            sheet11.range(f"E{i}").formula = (
+                f'=SUMIF(LargeSalesData!B2:B201,"{region}",LargeSalesData!D2:D201)'
+            )
+            sheet11.range(f"F{i}").formula = f'=COUNTIF(LargeSalesData!B2:B201,"{region}")'
             sheet11.range(f"G{i}").formula = f"=E{i}/F{i}"
 
         # Product Summary
@@ -385,8 +413,10 @@ def create_test_workbook(output_path: Path):
         products = ["Product A", "Product B", "Product C", "Product D", "Product E"]
         for i, product in enumerate(products, start=2):
             sheet11.range(f"I{i}").value = product
-            sheet11.range(f"J{i}").formula = f"=SUMIF(LargeSalesData!C2:C201,\"{product}\",LargeSalesData!D2:D201)"
-            sheet11.range(f"K{i}").formula = f"=COUNTIF(LargeSalesData!C2:C201,\"{product}\")"
+            sheet11.range(f"J{i}").formula = (
+                f'=SUMIF(LargeSalesData!C2:C201,"{product}",LargeSalesData!D2:D201)'
+            )
+            sheet11.range(f"K{i}").formula = f'=COUNTIF(LargeSalesData!C2:C201,"{product}")'
             sheet11.range(f"L{i}").formula = f"=J{i}/K{i}"
 
         print("  - Created sales summary with region and product aggregations")
@@ -407,11 +437,21 @@ def create_test_workbook(output_path: Path):
             month_num = i - 1
             sheet12.range(f"A{i}").value = month
             # Sum sales for the month (simplified - in real scenario would filter by date)
-            sheet12.range(f"B{i}").formula = f"=SUM(LargeSalesData!D{2+(month_num-1)*33}:D{1+month_num*33})"
-            sheet12.range(f"C{i}").formula = f"=SUM(LargeSalesData!E{2+(month_num-1)*33}:E{1+month_num*33})"
-            sheet12.range(f"D{i}").formula = f"=SUM(LargeSalesData!H{2+(month_num-1)*33}:H{1+month_num*33})"
-            sheet12.range(f"E{i}").formula = f"=AVERAGE(LargeSalesData!D{2+(month_num-1)*33}:D{1+month_num*33})"
-            sheet12.range(f"F{i}").formula = f"=COUNT(LargeSalesData!D{2+(month_num-1)*33}:D{1+month_num*33})"
+            sheet12.range(f"B{i}").formula = (
+                f"=SUM(LargeSalesData!D{2+(month_num-1)*33}:D{1+month_num*33})"
+            )
+            sheet12.range(f"C{i}").formula = (
+                f"=SUM(LargeSalesData!E{2+(month_num-1)*33}:E{1+month_num*33})"
+            )
+            sheet12.range(f"D{i}").formula = (
+                f"=SUM(LargeSalesData!H{2+(month_num-1)*33}:H{1+month_num*33})"
+            )
+            sheet12.range(f"E{i}").formula = (
+                f"=AVERAGE(LargeSalesData!D{2+(month_num-1)*33}:D{1+month_num*33})"
+            )
+            sheet12.range(f"F{i}").formula = (
+                f"=COUNT(LargeSalesData!D{2+(month_num-1)*33}:D{1+month_num*33})"
+            )
 
         print("  - Created monthly aggregation")
 
@@ -483,17 +523,25 @@ def create_test_workbook(output_path: Path):
 
         for i, category in enumerate(categories, start=2):
             sheet14.range(f"A{i}").value = category
-            sheet14.range(f"B{i}").formula = f"=COUNTIF(InventoryData!B2:B151,\"{category}\")"
-            sheet14.range(f"C{i}").formula = f"=SUMIF(InventoryData!B2:B151,\"{category}\",InventoryData!D2:D151)"
-            sheet14.range(f"D{i}").formula = f"=SUMIF(InventoryData!B2:B151,\"{category}\",InventoryData!F2:F151)"
-            sheet14.range(f"E{i}").formula = f"=AVERAGEIF(InventoryData!B2:B151,\"{category}\",InventoryData!E2:E151)"
-            sheet14.range(f"F{i}").formula = f"=COUNTIFS(InventoryData!B2:B151,\"{category}\",InventoryData!H2:H151,\"Low\")"
+            sheet14.range(f"B{i}").formula = f'=COUNTIF(InventoryData!B2:B151,"{category}")'
+            sheet14.range(f"C{i}").formula = (
+                f'=SUMIF(InventoryData!B2:B151,"{category}",InventoryData!D2:D151)'
+            )
+            sheet14.range(f"D{i}").formula = (
+                f'=SUMIF(InventoryData!B2:B151,"{category}",InventoryData!F2:F151)'
+            )
+            sheet14.range(f"E{i}").formula = (
+                f'=AVERAGEIF(InventoryData!B2:B151,"{category}",InventoryData!E2:E151)'
+            )
+            sheet14.range(f"F{i}").formula = (
+                f'=COUNTIFS(InventoryData!B2:B151,"{category}",InventoryData!H2:H151,"Low")'
+            )
 
         # Overall totals
         sheet14.range("A10").value = "TOTAL"
         sheet14.range("B10").formula = "=SUM(InventoryData!D2:D151)"
         sheet14.range("C10").formula = "=SUM(InventoryData!F2:F151)"
-        sheet14.range("D10").formula = "=COUNTIF(InventoryData!H2:H151,\"Low\")"
+        sheet14.range("D10").formula = '=COUNTIF(InventoryData!H2:H151,"Low")'
 
         print("  - Created inventory summary by category")
 

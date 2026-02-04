@@ -22,9 +22,7 @@ def test_excel_reader_validation(tmp_path):
         reader.read()
 
 
-@pytest.mark.skipif(
-    True, reason="Requires Excel and xlwings - run manually with actual Excel file"
-)
+@pytest.mark.skipif(True, reason="Requires Excel and xlwings - run manually with actual Excel file")
 def test_excel_reader_extraction(fixtures_dir):
     """
     Test extracting data from Excel file.

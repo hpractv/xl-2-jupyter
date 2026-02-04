@@ -4,4 +4,3 @@ from xl2jupyter.cli.main import main
 
 if __name__ == "__main__":
     main()
-

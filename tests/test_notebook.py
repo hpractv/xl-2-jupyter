@@ -62,7 +62,7 @@ class TestNotebookBuilder:
 
         vba_module = VBAModule(
             name="Module1",
-            code="Sub Test()\n    MsgBox \"Hello\"\nEnd Sub",
+            code='Sub Test()\n    MsgBox "Hello"\nEnd Sub',
             module_type="Standard",
         )
         workbook.add_vba_module(vba_module)

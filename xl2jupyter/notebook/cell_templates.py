@@ -8,12 +8,22 @@ from xl2jupyter.model.sheet import SheetModel
 from xl2jupyter.model.workbook import WorkbookModel
 
 
-def create_markdown_intro(workbook: WorkbookModel) -> str:
+def create_markdown_intro(
+    workbook: WorkbookModel,
+    export_data: bool = True,
+    export_formulas: bool = True,
+    export_graphs: bool = True,
+    export_vba: bool = True,
+) -> str:
     """
     Create markdown introduction cell content.
 
     Args:
         workbook: WorkbookModel instance
+        export_data: Whether data is being exported
+        export_formulas: Whether formulas are being exported
+        export_graphs: Whether graphs are being exported
+        export_vba: Whether VBA is being exported
 
     Returns:
         Markdown string
@@ -30,11 +40,24 @@ def create_markdown_intro(workbook: WorkbookModel) -> str:
         "---",
         "",
         "This notebook contains:",
-        "- DataFrames for each sheet",
-        "- Extracted formulas",
-        "- Formula dependency information",
-        "- VBA module code",
     ]
+
+    # Add what's being exported
+    exported_items = []
+    if export_data:
+        exported_items.append("- DataFrames for each sheet")
+    if export_formulas:
+        exported_items.append("- Extracted formulas")
+        exported_items.append("- Formula dependency information")
+    if export_graphs:
+        exported_items.append("- Charts and graphs")
+    if export_vba:
+        exported_items.append("- VBA module code")
+
+    if exported_items:
+        lines.extend(exported_items)
+    else:
+        lines.append("- (No content exported)")
 
     return "\n".join(lines)
 
@@ -107,7 +130,9 @@ def create_formulas_cell(workbook: WorkbookModel) -> str:
         sheet_formulas = []
         for cell in sheet.cells.values():
             if cell.formula:
-                formula_str = f"={cell.formula}" if not cell.formula.startswith("=") else cell.formula
+                formula_str = (
+                    f"={cell.formula}" if not cell.formula.startswith("=") else cell.formula
+                )
                 sheet_formulas.append((cell.address, formula_str, cell.dependencies))
 
         if sheet_formulas:

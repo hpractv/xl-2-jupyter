@@ -167,7 +167,7 @@ class TestVBAModule:
         """Test creating a VBA module."""
         module = VBAModule(
             name="Module1",
-            code="Sub Test()\n    MsgBox \"Hello\"\nEnd Sub",
+            code='Sub Test()\n    MsgBox "Hello"\nEnd Sub',
             module_type="Standard",
         )
         assert module.name == "Module1"

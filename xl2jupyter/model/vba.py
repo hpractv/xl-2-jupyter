@@ -31,4 +31,3 @@ class VBAModule:
             module_type=data["module_type"],
             sheet_name=data.get("sheet_name"),
         )
-

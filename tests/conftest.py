@@ -44,7 +44,7 @@ def sample_vba_module():
     """Create a sample VBA module for testing."""
     return VBAModule(
         name="Module1",
-        code="Sub Test()\n    MsgBox \"Hello\"\nEnd Sub",
+        code='Sub Test()\n    MsgBox "Hello"\nEnd Sub',
         module_type="Standard",
     )
 

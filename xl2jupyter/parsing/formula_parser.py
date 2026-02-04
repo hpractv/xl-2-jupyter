@@ -20,9 +20,7 @@ class FormulaParser:
     def __init__(self):
         """Initialize formula parser."""
         if Parser is None:
-            logger.warning(
-                "formulas library not available. Formula parsing will be limited."
-            )
+            logger.warning("formulas library not available. Formula parsing will be limited.")
             self.parser = None
         else:
             try:
