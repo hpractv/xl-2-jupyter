@@ -98,4 +98,3 @@ class WorkbookModel:
 
         data = json.loads(json_str)
         return cls.from_dict(data)
-

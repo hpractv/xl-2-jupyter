@@ -51,7 +51,9 @@ class DependencyGraph:
                             if target_node in self.graph:
                                 self.graph.add_edge(source_node, target_node)
 
-        logger.info(f"Built dependency graph with {self.graph.number_of_nodes()} nodes and {self.graph.number_of_edges()} edges")
+        logger.info(
+            f"Built dependency graph with {self.graph.number_of_nodes()} nodes and {self.graph.number_of_edges()} edges"
+        )
         return self.graph
 
     def _cell_to_node(self, sheet_name: str, cell) -> str:

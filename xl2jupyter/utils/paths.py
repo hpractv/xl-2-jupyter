@@ -63,4 +63,3 @@ def validate_output_path(path: Optional[str | Path], input_path: Path) -> Path:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     return output_path
-

@@ -77,18 +77,22 @@ def main():
         export_items = set(args.export)
         if "all" in export_items:
             export_items = {"data", "formulas", "graphs", "vba"}
-        
+
         # Handle deprecated --no-vba flag
         if args.no_vba:
-            logger.warning("--no-vba flag is deprecated. Use '--export data formulas graphs' instead")
+            logger.warning(
+                "--no-vba flag is deprecated. Use '--export data formulas graphs' instead"
+            )
             export_items.discard("vba")
-        
+
         export_data = "data" in export_items
         export_formulas = "formulas" in export_items
         export_graphs = "graphs" in export_items
         export_vba = "vba" in export_items
-        
-        logger.info(f"Export settings: data={export_data}, formulas={export_formulas}, graphs={export_graphs}, vba={export_vba}")
+
+        logger.info(
+            f"Export settings: data={export_data}, formulas={export_formulas}, graphs={export_graphs}, vba={export_vba}"
+        )
 
         # Extract workbook data
         logger.info("Extracting workbook data...")

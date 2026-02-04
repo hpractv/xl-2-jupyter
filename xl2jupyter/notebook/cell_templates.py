@@ -41,7 +41,7 @@ def create_markdown_intro(
         "",
         "This notebook contains:",
     ]
-    
+
     # Add what's being exported
     exported_items = []
     if export_data:
@@ -53,7 +53,7 @@ def create_markdown_intro(
         exported_items.append("- Charts and graphs")
     if export_vba:
         exported_items.append("- VBA module code")
-    
+
     if exported_items:
         lines.extend(exported_items)
     else:
@@ -130,7 +130,9 @@ def create_formulas_cell(workbook: WorkbookModel) -> str:
         sheet_formulas = []
         for cell in sheet.cells.values():
             if cell.formula:
-                formula_str = f"={cell.formula}" if not cell.formula.startswith("=") else cell.formula
+                formula_str = (
+                    f"={cell.formula}" if not cell.formula.startswith("=") else cell.formula
+                )
                 sheet_formulas.append((cell.address, formula_str, cell.dependencies))
 
         if sheet_formulas:

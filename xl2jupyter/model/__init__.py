@@ -6,4 +6,3 @@ from xl2jupyter.model.cell import CellModel
 from xl2jupyter.model.vba import VBAModule
 
 __all__ = ["WorkbookModel", "SheetModel", "CellModel", "VBAModule"]
-

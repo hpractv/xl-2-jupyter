@@ -56,4 +56,3 @@ class CellModel:
             result = chr(65 + (column % 26)) + result
             column //= 26
         return result
-

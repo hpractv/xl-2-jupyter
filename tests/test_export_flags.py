@@ -24,7 +24,7 @@ class TestExportFlags:
         sheet.set_cell(CellModel(row=1, column=1, value=10))
         sheet.set_cell(CellModel(row=1, column=2, value=20, formula="A1*2"))
         workbook.add_sheet(sheet)
-        
+
         vba_module = VBAModule(
             name="Module1",
             code="Sub Test()\nEnd Sub",
@@ -37,7 +37,7 @@ class TestExportFlags:
 
         # Should have intro, imports, data, formulas, dependency graph, and VBA
         assert len(notebook.cells) >= 5
-        
+
         # Check for code cells (imports + data)
         code_cells = [c for c in notebook.cells if c.cell_type == "code"]
         assert len(code_cells) >= 2
@@ -49,7 +49,7 @@ class TestExportFlags:
         sheet.set_cell(CellModel(row=1, column=1, value=10))
         sheet.set_cell(CellModel(row=1, column=2, value=20, formula="A1*2"))
         workbook.add_sheet(sheet)
-        
+
         vba_module = VBAModule(
             name="Module1",
             code="Sub Test()\nEnd Sub",
@@ -68,11 +68,11 @@ class TestExportFlags:
 
         # Should have intro, imports, and data cells only
         assert len(notebook.cells) >= 2
-        
+
         # Check that notebook has code cells (imports + data)
         code_cells = [c for c in notebook.cells if c.cell_type == "code"]
         assert len(code_cells) >= 2
-        
+
         # Check that formulas and VBA are not in the notebook
         notebook_text = json.dumps(notebook, indent=2)
         assert "Formula" not in notebook_text or "Extracted Formulas" not in notebook_text
@@ -97,15 +97,15 @@ class TestExportFlags:
 
         # Should have intro and formulas cells
         assert len(notebook.cells) >= 2
-        
+
         # Check that we have markdown cells with formulas
         markdown_cells = [c for c in notebook.cells if c.cell_type == "markdown"]
         assert len(markdown_cells) >= 2
-        
+
         # Check that formulas are in the notebook
         notebook_text = json.dumps(notebook, indent=2)
         assert "Extracted Formulas" in notebook_text or "Formula" in notebook_text
-        
+
         # Check that data cells (imports) are not included
         code_cells = [c for c in notebook.cells if c.cell_type == "code"]
         assert len(code_cells) == 0
@@ -116,7 +116,7 @@ class TestExportFlags:
         sheet = SheetModel(name="Sheet1")
         sheet.set_cell(CellModel(row=1, column=1, value=10))
         workbook.add_sheet(sheet)
-        
+
         vba_module = VBAModule(
             name="Module1",
             code="Sub Test()\nEnd Sub",
@@ -135,7 +135,7 @@ class TestExportFlags:
 
         # Should have intro and VBA cells
         assert len(notebook.cells) >= 2
-        
+
         # Check that VBA is in the notebook
         notebook_text = json.dumps(notebook, indent=2)
         assert "Module1" in notebook_text or "VBA" in notebook_text
@@ -147,7 +147,7 @@ class TestExportFlags:
         sheet.set_cell(CellModel(row=1, column=1, value=10))
         sheet.set_cell(CellModel(row=1, column=2, value=20, formula="A1*2"))
         workbook.add_sheet(sheet)
-        
+
         vba_module = VBAModule(
             name="Module1",
             code="Sub Test()\nEnd Sub",
@@ -166,15 +166,15 @@ class TestExportFlags:
 
         # Should have intro, imports, data, formulas, and dependency graph
         assert len(notebook.cells) >= 4
-        
+
         # Check for code cells (imports + data)
         code_cells = [c for c in notebook.cells if c.cell_type == "code"]
         assert len(code_cells) >= 2
-        
+
         # Check that formulas are in the notebook
         notebook_text = json.dumps(notebook, indent=2)
         assert "Extracted Formulas" in notebook_text or "Formula" in notebook_text
-        
+
         # Check that VBA is not in the notebook
         assert "Module1" not in notebook_text
 

@@ -17,7 +17,9 @@ class TestFormulaParser:
 
         assert cell.formula == "SUM(A1:A5)"
         assert len(cell.dependencies) > 0
-        assert "A1:A5" in cell.dependencies or any("A1" in dep and "A5" in dep for dep in cell.dependencies)
+        assert "A1:A5" in cell.dependencies or any(
+            "A1" in dep and "A5" in dep for dep in cell.dependencies
+        )
 
     def test_parse_cross_sheet_reference(self):
         """Test parsing cross-sheet references."""

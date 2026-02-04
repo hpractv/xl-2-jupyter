@@ -24,8 +24,29 @@ pip install -e .
 
 ## Usage
 
+Basic usage (exports everything):
+
 ```bash
 xl2jupyter input.xlsb output.ipynb
+```
+
+Selective export using flags:
+
+```bash
+# Export only data (no formulas or VBA)
+xl2jupyter input.xlsb output.ipynb --export data
+
+# Export only formulas
+xl2jupyter input.xlsb output.ipynb --export formulas
+
+# Export data and formulas (no VBA)
+xl2jupyter input.xlsb output.ipynb --export data formulas
+
+# Export only VBA modules
+xl2jupyter input.xlsb output.ipynb --export vba
+
+# Export everything (same as default)
+xl2jupyter input.xlsb output.ipynb --export all
 ```
 
 Or as a Python module:
@@ -33,6 +54,18 @@ Or as a Python module:
 ```bash
 python -m xl2jupyter input.xlsb output.ipynb
 ```
+
+### Export Options
+
+The `--export` flag allows you to selectively export content:
+
+- `data`: Export sheet data as pandas DataFrames
+- `formulas`: Export formulas and dependency graphs
+- `vba`: Export VBA modules
+- `graphs`: Export charts and graphs (planned feature)
+- `all`: Export everything (default)
+
+You can specify multiple values, e.g., `--export data formulas` to export only data and formulas.
 
 ## Project Structure
 
