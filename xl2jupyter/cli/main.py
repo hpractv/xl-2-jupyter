@@ -43,7 +43,20 @@ def main():
     parser.add_argument(
         "--no-vba",
         action="store_true",
-        help="Skip VBA extraction",
+        help="Skip VBA extraction (deprecated, use --export instead)",
+    )
+
+    parser.add_argument(
+        "--export",
+        type=str,
+        nargs="+",
+        choices=["data", "formulas", "graphs", "vba", "all"],
+        default=["all"],
+        help=(
+            "Specify what to export: data, formulas, graphs, vba, or all. "
+            "Can specify multiple values (e.g., --export data formulas). "
+            "Default: all"
+        ),
     )
 
     args = parser.parse_args()
@@ -60,27 +73,51 @@ def main():
         output_path = validate_output_path(args.output, input_path)
         logger.info(f"Output file: {output_path}")
 
+        # Determine what to export
+        export_items = set(args.export)
+        if "all" in export_items:
+            export_items = {"data", "formulas", "graphs", "vba"}
+        
+        # Handle deprecated --no-vba flag
+        if args.no_vba:
+            logger.warning("--no-vba flag is deprecated. Use '--export data formulas graphs' instead")
+            export_items.discard("vba")
+        
+        export_data = "data" in export_items
+        export_formulas = "formulas" in export_items
+        export_graphs = "graphs" in export_items
+        export_vba = "vba" in export_items
+        
+        logger.info(f"Export settings: data={export_data}, formulas={export_formulas}, graphs={export_graphs}, vba={export_vba}")
+
         # Extract workbook data
         logger.info("Extracting workbook data...")
         reader = ExcelReader(input_path)
         workbook = reader.read()
 
-        # Skip VBA extraction if requested
-        if args.no_vba:
+        # Skip VBA extraction if not requested
+        if not export_vba:
             workbook.vba_modules.clear()
-            logger.info("VBA extraction skipped (--no-vba flag)")
+            logger.info("VBA extraction skipped")
 
-        # Parse formulas
-        logger.info("Parsing formulas...")
-        parser = FormulaParser()
-        for sheet_name, sheet in workbook.sheets.items():
-            for cell in sheet.cells.values():
-                if cell.formula:
-                    parser.parse_cell(cell, sheet_name)
+        # Parse formulas (only if formulas are being exported)
+        if export_formulas:
+            logger.info("Parsing formulas...")
+            parser = FormulaParser()
+            for sheet_name, sheet in workbook.sheets.items():
+                for cell in sheet.cells.values():
+                    if cell.formula:
+                        parser.parse_cell(cell, sheet_name)
 
         # Build notebook
         logger.info("Building Jupyter notebook...")
-        builder = NotebookBuilder(workbook)
+        builder = NotebookBuilder(
+            workbook,
+            export_data=export_data,
+            export_formulas=export_formulas,
+            export_graphs=export_graphs,
+            export_vba=export_vba,
+        )
         builder.build()
         builder.save(output_path)
 
